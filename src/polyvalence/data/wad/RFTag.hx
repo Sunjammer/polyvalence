@@ -1,7 +1,8 @@
-package polyvalence.data;
+package polyvalence.data.wad;
 
+// Resource fork tags
 @:build(polyvalence.macro.TagMacros.buildTags())
-enum abstract Tags(UInt) from UInt to UInt{
+enum abstract RFTag(UInt) from UInt to UInt{
     /* OSTypes.. */
     var APPLICATION_CREATOR = '52.4';
     var SCENARIO_FILE_TYPE = 'sce2';

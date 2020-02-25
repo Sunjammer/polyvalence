@@ -1,23 +1,11 @@
 package polyvalence.io;
 
+import polyvalence.data.wad.WadFile;
 import sys.FileSystem;
 import sys.io.FileInput;
-import polyvalence.data.WadFile;
 import sys.io.File;
 import haxe.io.Bytes;
 using polyvalence.io.MacCompat;
-
-enum WadfileVersion {
-	PreEntryPoint;
-	HasDirectoryEntry;
-	SupportsOverlays;
-	HasInfinityStuff;
-}
-
-enum WadfileDataVersion {
-	Marathon;
-	MarathonTwo;
-}
 
 class Reader {
 

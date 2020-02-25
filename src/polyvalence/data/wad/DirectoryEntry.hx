@@ -1,10 +1,15 @@
-package polyvalence.data;
+package polyvalence.data.wad;
 import sys.io.FileInput;
 import haxe.io.Bytes;
+import polyvalence.data.wad.RFTag;
 using polyvalence.io.MacCompat;
 
 class Chunk{
-    public inline function new(tag:Int, bytes:Bytes){
+    public var tag:RFTag;
+    public var bytes:Bytes;
+    public var length:Int;
+    
+    public inline function new(tag:RFTag, bytes:Bytes){
         this.bytes = bytes;
         this.length = bytes.length;
         this.tag = tag;
@@ -16,9 +21,6 @@ class Chunk{
         split.reverse();
         return split.join('');
     }
-    public var tag:Int;
-    public var bytes:Bytes;
-    public var length:Int;
 }
 
 class DirectoryEntry {
@@ -44,14 +46,13 @@ class DirectoryEntry {
         Offset = reader.readInt32();
         reader.readInt32(); // size
         Index = reader.readInt16();
-        trace("Loaded directory entry: "+Index+" at "+Offset);
     }
     
     public function LoadChunks(reader:FileInput) {
         var position = reader.tell();
         var nextOffset;
         do {
-            var tag = reader.readUint32B(); // Offset 
+            var tag:RFTag = reader.readUint32B(); // Offset 
             nextOffset = reader.readInt32();
             var length = reader.readInt32();
             reader.readInt32(); // offset;
