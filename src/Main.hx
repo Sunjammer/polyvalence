@@ -8,14 +8,22 @@ class Main{
     public static function main(){
         var args = Sys.args();
 
+        var wads = [
+            'test_data/m2/Map.sceA',
+            'test_data/m2/Images.imgA',
+            //'test_data/m2/Sounds.sndA',
+            //'test_data/m2/Shapes.shpA'
+        ];
         //Reader.readWad('test_data/m1/Map.scen');
-        var wad = Reader.readWad('test_data/m2/Map.sceA');
-
-        for(e in wad.directory){
-            for(c in e.chunks){
-                polyvalence.data.wad.transform.DataFromChunk.fromChunk(c);
+        for(w in wads){
+            var wad = Reader.readWad(w);
+    
+            for(e in wad.directory){
+                for(c in e.chunks){
+                    polyvalence.data.wad.transform.DataFromChunk.fromChunk(c);
+                }
+                break;
             }
-            break;
         }
     }
 }

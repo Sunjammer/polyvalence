@@ -3,6 +3,7 @@ package polyvalence.data.wad;
 import sys.io.FileInput;
 using polyvalence.io.MacCompat;
 using polyvalence.io.BinDump;
+using StringTools;
 
 enum abstract WadfileVersion(Int) from Int to Int{
 	var PreEntryPoint;
@@ -36,13 +37,13 @@ class WadFile{
 		// No M1 compat for now since it makes reading data a chore
 		readDirectory(file, fork_start);
 		trace("Done");
-		//dumpDirectory();
+		dumpDirectory();
 	}
 
 	function dumpDirectory(){
 		trace("Dumping directory");
 		for(d in directory){
-			d.dumpDirectoryEntry();
+			d.dumpDirectoryEntry(file_name);
 		}
 	}
 
@@ -54,7 +55,7 @@ class WadFile{
 		data_version = file.readInt16();
 		trace("Data version: "+data_version);
         //char file_name[MAXIMUM_WADFILE_NAME_LENGTH];
-        file_name = file.readMacString(MAXIMUM_WADFILE_NAME_LENGTH);
+        file_name = file.readMacString(MAXIMUM_WADFILE_NAME_LENGTH).trim();
         //unsigned long checksum;
         checksum = file.readUint32B();
         //long directory_offset;
