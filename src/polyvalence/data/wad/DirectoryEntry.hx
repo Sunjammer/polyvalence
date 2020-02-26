@@ -24,31 +24,31 @@ class Chunk{
 }
 
 class DirectoryEntry {
-    final BaseSize = 10;
-    final HeaderSize = 16;
+    final BASE_SIZE = 10;
+    final HEADER_SIZE = 16;
 
-    public var Chunks:Map<UInt, Chunk> = new Map ();
+    public var chunks:Map<UInt, Chunk> = new Map ();
     
-    public var Offset:Int;
-    public var Index:Int;
-    public var Size(get,null):Int;
-    function get_Size() {
+    public var offset:Int;
+    public var index:Int;
+    public var size(get,null):Int;
+    function get_size() {
         var total = 0;
-        for (chunk in Chunks) {
-            total += chunk.length + HeaderSize;
+        for (chunk in chunks) {
+            total += chunk.length + HEADER_SIZE;
         }
         return total;
     }
 
     public function new(){}
 
-    public function LoadEntry(reader:FileInput) {
-        Offset = reader.readInt32();
+    public function loadEntry(reader:FileInput) {
+        offset = reader.readInt32();
         reader.readInt32(); // size
-        Index = reader.readInt16();
+        index = reader.readInt16();
     }
     
-    public function LoadChunks(reader:FileInput) {
+    public function loadChunks(reader:FileInput) {
         var position = reader.tell();
         var nextOffset;
         do {
@@ -57,7 +57,7 @@ class DirectoryEntry {
             var length = reader.readInt32();
             reader.readInt32(); // offset;
                     
-            Chunks[tag] = new Chunk(tag, reader.read(length));
+            chunks[tag] = new Chunk(tag, reader.read(length));
                     
             if (nextOffset > 0) 
                 reader.seek(position + nextOffset, SeekBegin);
@@ -70,19 +70,19 @@ class DirectoryEntry {
         writer.Write(Index);
     }	
 
-    function SaveChunks(BinaryWriterBE writer, uint[] tagOrder) {
+    function Savechunks(BinaryWriterBE writer, uint[] tagOrder) {
         // build a list of tags to write in order
         HashSet<uint> Used = new HashSet<uint>();
         List<uint> Tags = new List<uint>();
 
         foreach (uint tag in tagOrder) {
-            if (Chunks.ContainsKey(tag)) {
+            if (chunks.ContainsKey(tag)) {
                 Tags.Add(tag);
                 Used.Add(tag);
             }
         }
 
-        foreach (var kvp in Chunks) {
+        foreach (var kvp in chunks) {
             if (!Used.Contains(kvp.Key)) {
                 Tags.Add(kvp.Key);
                 Used.Add(kvp.Key);
@@ -96,20 +96,20 @@ class DirectoryEntry {
             if (tag == Tags[Tags.Count - 1]) {
                 writer.Write((uint) 0);
             } else {
-                writer.Write((int) offset + HeaderSize + Chunks[tag].Length);
+                writer.Write((int) offset + HEADER_SIZE + chunks[tag].Length);
             }
-            writer.Write((int) Chunks[tag].Length);
+            writer.Write((int) chunks[tag].Length);
             writer.Write((int) 0);
-            writer.Write(Chunks[tag]);
-            offset += Chunks[tag].Length + HeaderSize;
+            writer.Write(chunks[tag]);
+            offset += chunks[tag].Length + HEADER_SIZE;
         }
     }*/
 
     /*public function Clone():DirectoryEntry {
         var clone = MemberwiseClone();
-        clone.Chunks = new Dictionary<uint, byte[]>();
-        foreach (var kvp in Chunks) {
-            clone.Chunks[kvp.Key] = (byte[]) kvp.Value.Clone();
+        clone.chunks = new Dictionary<uint, byte[]>();
+        foreach (var kvp in chunks) {
+            clone.chunks[kvp.Key] = (byte[]) kvp.Value.Clone();
         }
         return clone;
     }*/
