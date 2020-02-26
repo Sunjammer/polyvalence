@@ -1,17 +1,18 @@
 package polyvalence.io;
 
 import sys.io.FileInput;
+import haxe.io.Input;
 import polyvalence.util.UShort;
 
 class MacCompat {
 	static final HEADER_SIZE = 128;
 
-	public static function readMacString(fi:FileInput, length:Int) {
+	public static function readMacString(fi:Input, length:Int) {
 		var str = fi.readString(length, RawNative);
-		return str.split('0')[0];
+		return str.split('0')[0].split(String.fromCharCode(0)).join(String.fromCharCode(32));
 	}
 
-	public static function readUint32B(fp:FileInput):UInt {
+	public static function readUint32B(fp:Input):UInt {
 		var byte1 = fp.readByte();
 		var byte2 = fp.readByte();
 		var byte3 = fp.readByte();
