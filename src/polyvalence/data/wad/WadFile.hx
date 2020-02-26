@@ -2,6 +2,7 @@ package polyvalence.data.wad;
 
 import sys.io.FileInput;
 using polyvalence.io.MacCompat;
+using polyvalence.io.BinDump;
 
 enum abstract WadfileVersion(Int) from Int to Int{
 	var PreEntryPoint;
@@ -19,24 +20,30 @@ class WadFile{
     static final MAXIMUM_WADFILE_NAME_LENGTH = 64;
 	public var version:WadfileVersion;
 	public var data_version:WadfileDataVersion;
-	public var checksum:Int;
-	public var directory_offset:Int;
+	var checksum:Int;
+	var directory_offset:Int;
 	public var wad_count:Int;
-	public var application_specific_directory_data_size:Int;
-	public var entry_header_size:Int;
-	public var directory_entry_base_size:Int;
-	public var parent_checksum:Int;
+	var application_specific_directory_data_size:Int;
+	var entry_header_size:Int;
+	var directory_entry_base_size:Int;
+	var parent_checksum:Int;
 	public var file_name:String;
 
 	public var directory:Map<Int, DirectoryEntry> = new Map ();
 
     public function new(file:FileInput, fork_start:Int){
 		readHeader(file);
-
 		// No M1 compat for now since it makes reading data a chore
 		readDirectory(file, fork_start);
-		readWads(file, fork_start);
 		trace("Done");
+		//dumpDirectory();
+	}
+
+	function dumpDirectory(){
+		trace("Dumping directory");
+		for(d in directory){
+			d.dumpDirectoryEntry();
+		}
 	}
 
 	function readHeader(file:FileInput){	
@@ -72,20 +79,21 @@ class WadFile{
 		trace("Reading directory... "+(directory_offset + fork_start));
 		for (i in 0...wad_count) {
 		    var entry = new DirectoryEntry();
-			entry.LoadEntry(file);
-			directory[entry.Index] = entry;
-			LoadApplicationSpecificDirectoryData(file, entry.Index);
+			entry.loadEntry(file);
+			directory[entry.index] = entry;
+			loadApplicationSpecificDirectoryData(file, entry.index);
 		}
+		readChunks(file, fork_start);
 	}
 
-	function LoadApplicationSpecificDirectoryData(file:FileInput, index:Int){
+	function loadApplicationSpecificDirectoryData(file:FileInput, index:Int){
 		file.read(application_specific_directory_data_size);
 	}
 
-	function readWads(file:FileInput, fork_start:Int){
+	function readChunks(file:FileInput, fork_start:Int){
 		for (entry in directory) {
-			file.seek(entry.Offset + fork_start, SeekBegin);
-		    entry.LoadChunks(file);
+			file.seek(entry.offset + fork_start, SeekBegin);
+		    entry.loadChunks(file);
 		}
 	}
 }
