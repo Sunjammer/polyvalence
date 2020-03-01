@@ -25,7 +25,8 @@ class TagMacros {
 				case FVar(_, expr):
 					switch (expr.expr) {
 						case EConst(CString(value, _)):
-                            expr.expr = EConst(CInt(strToUint32(value) + ''));
+							if(value.length==4)
+                            	expr.expr = EConst(CInt(strToUint32(value) + ''));
 						default:
 					}
 				default:
