@@ -15,4 +15,13 @@ class Point{
         strm.bigEndian = true;
         return new Point(strm.readInt16(), strm.readInt16());
     }
+
+    public static function arrayFromBytes(bytes:Bytes):Array<Point>{
+        var out = [];
+        var strm = new BytesInput(bytes);
+        while(strm.position<strm.length){
+            out.push(Point.fromBytes(strm.read(4)));
+        }
+        return out;
+    }
 }

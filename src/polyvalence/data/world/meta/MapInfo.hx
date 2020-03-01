@@ -26,14 +26,18 @@ class MapInfo{
         var out = new MapInfo();
         var strm = new BytesInput(bytes);
         strm.bigEndian = true;
-        out.envCode = strm.readUInt16();
-        out.physicsId = strm.readUInt16();
-        out.musicId = strm.readUInt16();
-        out.missionFlags = strm.readUInt16();
-        out.envFlags = strm.readUInt16();
-        strm.read(8);
-        out.name = strm.readMacString(66).trim();
-        out.entryFlags = strm.readUint32B();
+        try{
+            out.envCode = strm.readUInt16();
+            out.physicsId = strm.readUInt16();
+            out.musicId = strm.readUInt16();
+            out.missionFlags = strm.readUInt16();
+            out.envFlags = strm.readUInt16();
+            strm.read(8);
+            out.name = strm.readMacString(66).trim();
+            out.entryFlags = strm.readUint32B();
+        }catch(e:Dynamic){
+            trace(""+e);
+        }
 
         return out;
     }
