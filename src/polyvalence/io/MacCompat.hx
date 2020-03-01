@@ -1,5 +1,6 @@
 package polyvalence.io;
 
+import haxe.io.BytesInput;
 import sys.io.FileInput;
 import haxe.io.Input;
 import polyvalence.util.UShort;
@@ -8,8 +9,10 @@ class MacCompat {
 	static final HEADER_SIZE = 128;
 
 	public static function readMacString(fi:Input, length:Int) {
-		var str = fi.readString(length, RawNative);
-		return str.split('0')[0].split(String.fromCharCode(0)).join(String.fromCharCode(32));
+		var bytes = fi.read(length);
+		var bi = new BytesInput(bytes);
+		bi.bigEndian = true;
+		return bi.readString(length, RawNative).split(String.fromCharCode(0))[0];
 	}
 
 	public static function readUint32B(fp:Input):UInt {
