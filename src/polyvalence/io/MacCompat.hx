@@ -10,9 +10,12 @@ class MacCompat {
 
 	public static function readMacString(fi:Input, length:Int) {
 		var bytes = fi.read(length);
+		for(i in 0...bytes.length){
+			var char = bytes.get(i);
+			bytes.set(i, MacRoman.convert(char));
+		}
 		var bi = new BytesInput(bytes);
-		bi.bigEndian = true;
-		return bi.readString(length, RawNative).split(String.fromCharCode(0))[0];
+		return bi.readString(length).split(String.fromCharCode(0))[0];
 	}
 
 	public static function readUint32B(fp:Input):UInt {
