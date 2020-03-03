@@ -13,4 +13,8 @@ class LevelGeom{
         points = [];
         sides = [];
     }
+
+    public function toString():String{
+        return '[LevelGeom Polys:${polys.length} EPoints:${endpoints.length} Lines:${lines.length} Points:${points.length} Sides:${sides.length} ]';
+    }
 }

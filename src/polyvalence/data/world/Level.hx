@@ -23,7 +23,7 @@ class Level {
     }
 
     public function toString():String{
-        return info.toString();
+        return '[Level Info:${info} Geom:${geom}]';
     }
 
 	public static function fromDirectoryEntry(de:DirectoryEntry):Level {
