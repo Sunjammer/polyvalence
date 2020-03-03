@@ -11,7 +11,9 @@ enum ChunkData{
 	Lines(a:Array<Line>);
 	Endpoints(a:Array<Endpoint>);
 	Points(a:Array<Point>);
-	//TODO: Coverage
+	Annotations(a:Array<Annotation>);
+	
+
 	Ignored;
 }
 
@@ -31,6 +33,8 @@ class DataFromChunk {
 			trace("Reading chunk: "+uint32ToStr(chunk.tag));
 		#end
 		switch (chunk.tag) {
+			case ANNOTATION_TAG:
+				return Annotations(Annotation.arrayFromBytes(chunk.bytes));
 			/*case POINT_TAG:
 				return Points(Point.arrayFromBytes(chunk.bytes));*/
 			case POLYGON_TAG:
