@@ -10,6 +10,11 @@ class Point{
         this.x = x;
         this.y = y;
     }
+
+    public function toString():String{
+        return '[Point x:$x y:$y]';
+    }
+
     public static function fromBytes(bytes:Bytes):Point{
         var strm = new BytesInput(bytes);
         strm.bigEndian = true;
