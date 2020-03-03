@@ -12,7 +12,7 @@ enum ChunkData{
 	Endpoints(a:Array<Endpoint>);
 	Points(a:Array<Point>);
 	Annotations(a:Array<Annotation>);
-	
+	Sides(a:Array<Side>);
 
 	Ignored;
 }
@@ -33,6 +33,8 @@ class DataFromChunk {
 			trace("Reading chunk: "+uint32ToStr(chunk.tag));
 		#end
 		switch (chunk.tag) {
+			case SIDE_TAG:
+				return Sides(Side.arrayFromBytes(chunk.bytes));
 			case ANNOTATION_TAG:
 				return Annotations(Annotation.arrayFromBytes(chunk.bytes));
 			/*case POINT_TAG:

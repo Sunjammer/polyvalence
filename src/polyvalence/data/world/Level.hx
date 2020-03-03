@@ -43,6 +43,8 @@ class Level {
 					geom.endpoints = a;
 				case Points(a):
                     geom.points = a;
+                case Sides(a):
+                    geom.sides = a;
                 case Annotations(a):
                     annotations = a;
 				default:
