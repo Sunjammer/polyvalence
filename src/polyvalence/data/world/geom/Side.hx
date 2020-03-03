@@ -4,6 +4,39 @@ import polyvalence.data.shapes.ShapeDescriptor;
 import haxe.io.BytesInput;
 import haxe.io.Bytes;
 
+
+enum abstract SideType(Int) from Int to Int{
+	var Full;
+	var High;
+	var Low;
+	var Composite; // never
+	var Split;
+}
+
+enum abstract SideFlags(Int)  from Int to Int{
+    var None = 0x0;
+    var ControlPanelStatus = 0x01;
+    var IsControlPanel = 0x02;
+    var IsRepairSwitch = 0x04;
+    var IsDestructiveSwitch = 0x08;
+    var IsLightedSwitch = 0x10;
+    var SwitchCanBeDestroyed = 0x20;
+    var SwitchCanOnlyBeHitByProjectiles = 0x40;
+    var Dirty = 0x4000;
+}
+
+enum abstract ControlPanelClass(Int) from Int to Int {
+    var Oxygen;
+    var Shield;
+    var DoubleShield;
+    var TripleShield;
+    var LightSwitch;
+    var PlatformSwitch;
+    var TagSwitch;
+    var PatternBuffer;
+    var Terminal;
+}
+
 class TextureDef{
     // uv offsets
     public var x:Int;
@@ -32,8 +65,8 @@ class ExclusionZone{
 class Side{
     static final SIDE_SIZE = 64;
 
-	public var type:Int; //short
-	public var flags:Int; //word
+	public var type:SideType; //short
+	public var flags:SideFlags; //word
 	
 	public var primary_texture:TextureDef;
 	public var secondary_texture:TextureDef;
