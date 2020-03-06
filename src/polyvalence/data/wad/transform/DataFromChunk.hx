@@ -29,9 +29,6 @@ class DataFromChunk {
     }
 
 	public static function fromChunk(chunk:Chunk):ChunkData {
-		#if debug
-			trace("Reading chunk: "+uint32ToStr(chunk.tag));
-		#end
 		switch (chunk.tag) {
 			case SIDE_TAG:
 				return Sides(Side.arrayFromBytes(chunk.bytes));
