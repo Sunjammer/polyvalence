@@ -4,7 +4,36 @@ package polyvalence.data.world;
 typedef Angle = Int;
 typedef World_distance = Int;
 
+abstract WorldUnit(Int) from Int to Int{
+	
+	@:from
+	public static inline function fromDouble(d:Float):WorldUnit {
+		return Math.round(d * World.WORLD_ONE);
+	}
+
+	@:to
+	public static inline function toDouble(wu:WorldUnit):Float {
+		return wu / World.WORLD_ONE;
+	}
+
+	public inline function new(v:Int){
+		this = v;
+	}
+}
+
 class World {
+
+	/*public static class Angle {
+	const short AngularPrecision = 512;
+	public static short FromDouble(double d) {
+		return (short) Math.Round(d * AngularPrecision / 360);
+	}
+	public static double ToDouble(short a) {
+		return ((double) a * 360 / AngularPrecision);
+	}*/
+
+
+
 	/* ---------- constants */
 	public static inline var TRIG_SHIFT:Int = 10;
 	public static inline var TRIG_MAGNITUDE:Int = (1 << TRIG_SHIFT);
