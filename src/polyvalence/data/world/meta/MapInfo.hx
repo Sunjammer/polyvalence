@@ -4,22 +4,32 @@ using StringTools;
 
 import haxe.io.BytesInput;
 import haxe.io.Bytes;
+using StringTools;
 
 class MapInfo{
-    var envCode:UInt;
-    var physicsId:UInt;
-    var musicId:UInt;
-    var missionFlags:UInt;
-    var envFlags:UInt;
+    public var envCode:UInt;
+    public var physicsId:UInt;
+    public var musicId:UInt;
+    public var missionFlags:UInt;
+    public var envFlags:UInt;
     // | 8 bytes | Unused                                          |              |
-    var name:String; // | u8[66]
-    var entryFlags:UInt; // | u32     | Entry point flags                               | EntryFlags   |
+    public var name:UnicodeString; // | u8[66]
+    public var entryFlags:UInt; // | u32     | Entry point flags                               | EntryFlags   |
     public function new(){
 
     }
 
     public function toString(){
         return "[MapInfo '"+name+"']";
+    }
+
+    public function getFileFriendlyName():String{
+        var str = name.split(" ").join("_");
+        return str.split("")
+            .filter(char -> char.charCodeAt(0) <= 122 && char.charCodeAt(0) != 25)
+            .filter(char -> char != '.' && char != ',' && char != '?' && char != "!")
+            .join("");
+        
     }
 
     public static function fromBytes(bytes:Bytes):MapInfo{
