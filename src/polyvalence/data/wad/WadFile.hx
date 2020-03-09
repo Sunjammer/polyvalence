@@ -40,8 +40,12 @@ class WadFile {
 
 	public function new(file:FileInput, fork_start:Int) {
 		readHeader(file);
-		// No M1 compat for now since it makes reading data a chore
+	
+		trace("Read header, current pos is "+file.tell());
+
 		readDirectory(file, fork_start);
+		readChunks(file, fork_start);
+
 		trace("Done");
 		dumpDirectory();
 	}
@@ -74,14 +78,19 @@ class WadFile {
 		trace("Directory offset: " + directory_offset);
 		// short wad_count;
 		wad_count = file.readInt16();
+		trace("Wad count: " + wad_count);
 		// short application_specific_directory_data_size;
 		application_specific_directory_data_size = file.readInt16();
+		trace("application_specific_directory_data_size: " + application_specific_directory_data_size);
 		// short entry_header_size;
 		entry_header_size = file.readInt16();
+		trace("entry_header_size: " + entry_header_size);
 		// short directory_entry_base_size;
 		directory_entry_base_size = file.readInt16();
+		trace("directory_entry_base_size: " + directory_entry_base_size);
 		// unsigned long parent_checksum;	/* If non-zero, this is the checksum of our parent, and we are simply modifications! */
 		parent_checksum = file.readUint32B();
+		trace("parent_checksum: " + parent_checksum);
 		// short unused[20];
 		file.read(2 * 20);
 	}
@@ -89,7 +98,7 @@ class WadFile {
 	function readDirectory(file:FileInput, fork_start:Int) {
 		var start = directory_offset + fork_start;
 		file.seek(start, SeekBegin);
-		trace("Reading directory... " + (start));
+		trace("Reading directory... " + start);
 
 		switch (data_version) {
 			case Marathon:
@@ -99,26 +108,16 @@ class WadFile {
 			default:
 				throw "Unknown data_version";
 		}
-
 		for (i in 0...wad_count) {
-			var entry = new DirectoryEntry();
-			entry.loadEntry(file);
+			var entry = DirectoryEntry.load(file, data_version, application_specific_directory_data_size, i);
 			directory[entry.index] = entry;
-			loadApplicationSpecificDirectoryData(file, entry.index);
 		}
-		readChunks(file, fork_start);
-	}
-
-	function loadApplicationSpecificDirectoryData(file:FileInput, index:Int) {
-		file.read(application_specific_directory_data_size);
 	}
 
 	function readChunks(file:FileInput, fork_start:Int) {
-		trace("Reading chunks... " + (directory_offset + fork_start));
 		for (entry in directory) {
-			var start = entry.offset + fork_start;
+			var start = fork_start + entry.offset;
 			file.seek(start, SeekBegin);
-			trace("Entry start: " + start);
 			entry.loadChunks(file);
 		}
 	}

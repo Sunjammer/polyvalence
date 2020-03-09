@@ -1,4 +1,5 @@
 package polyvalence.data.wad;
+import polyvalence.data.wad.WadFile.WadfileDataVersion;
 import sys.io.FileInput;
 import haxe.io.Bytes;
 import polyvalence.data.wad.RFTag;
@@ -28,6 +29,9 @@ class DirectoryEntry {
     final HEADER_SIZE = 16;
 
     public var chunks:Map<UInt, Chunk> = new Map ();
+    public var app_specific_data:Bytes;
+
+    public var data_version:WadfileDataVersion;
     
     public var offset:Int = 0;
     public var index:Int = 0;
@@ -40,18 +44,34 @@ class DirectoryEntry {
         return total;
     }
 
-    public function new(){}
+    var entry_size:Int;
 
-    public function loadEntry(reader:FileInput) {
-        offset = reader.readInt32();
-        reader.readInt32(); // size
-        index = reader.readInt16();
+    public function new(){
+
+    }
+
+    public function toString(){
+        return '[DirectoryEntry offset=$offset index=$index]';
+    }
+
+    public static function load(reader:FileInput, data_version:WadfileDataVersion, app_specific_data_size:Int, wad_index:Int) {
+        var out = new DirectoryEntry();
+        out.offset = reader.readInt32();
+        out.entry_size = reader.readInt32(); // size
+        out.data_version = data_version;
+        switch(data_version){
+            case Marathon:
+                out.index = wad_index;
+            default:
+                out.index = reader.readInt16();
+        }
+        out.app_specific_data = reader.read(app_specific_data_size);
+        return out;
     }
     
     public function loadChunks(reader:FileInput) {
         reader.bigEndian = true;
         var position = reader.tell();
-        trace("Loading chunks from position "+position);
         var nextOffset;
         do {
             var tag:RFTag = reader.readUint32B(); 

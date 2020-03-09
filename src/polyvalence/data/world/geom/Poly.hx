@@ -51,13 +51,17 @@ class Poly{
         out.poly_type = str.readUInt16(); 
         out.poly_flags = str.readUInt16();
         out.permutation = str.readInt16();
+
         out.vertex_count = str.readUInt16();
         out.endpoint_indices = [for(i in 0...8) str.readUInt16()];
         out.line_indices = [for(i in 0...8) str.readUInt16()];
+
         out.floor_texture = str.readUInt16();
         out.ceiling_texture = str.readUInt16();
+
         out.floor_height = str.readInt16(); 
         out.ceiling_height = str.readUInt16();
+
         out.floor_lightsource_idx = str.readUInt16(); 
         out.ceiling_lightsource_idx = str.readUInt16();
         out.area_exp_2 = str.readInt32(); 
@@ -67,6 +71,7 @@ class Poly{
         out.num_pt_exclusion_zones = str.readUInt16();
         out.floor_transfer_mode = str.readUInt16();
         out.ceiling_transfer_mode = str.readUInt16();
+        
         out.adjacent_poly_indices = [for(i in 0...8) str.readUInt16()];
         out.first_neighboring_poly = str.readUInt16();
         out.num_neighboring_polys = str.readUInt16();

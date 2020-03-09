@@ -18,7 +18,7 @@ class Vertex {
 	public function new() {}
 
 	public function write(textWriter:Output) {
-		var x = X.toDouble() * OBJExporter.SCALE;
+		var x = X.toDouble() * OBJExporter.SCALE * -1;
 		var y = Y.toDouble() * OBJExporter.SCALE;
 		var z = Z.toDouble() * OBJExporter.SCALE;
 		textWriter.writeString('v $x $y $z\n');
@@ -108,6 +108,7 @@ class OBJExporter {
 		vertices = [];
 		endpointVertices = [];
 		materials = new Map();
+		//trace(level.geom.endpoints);
 		for (i in 0...level.geom.endpoints.length) {
 			endpointVertices.push(new Map());
 		}
@@ -144,16 +145,20 @@ class OBJExporter {
 	}
 
 	function getVertexIndex(endpointIndex:Int, height:Int) {
-		if (!endpointVertices[endpointIndex].exists(height)) {
-			var p = level.geom.endpoints[endpointIndex];
-			var v = new Vertex();
-			v.X = cast p.position.x;
-			v.Y = cast p.position.y;
-			v.Z = height;
-			endpointVertices[endpointIndex][height] = vertices.length;
-			vertices.push(v);
+		try{
+			if (!endpointVertices[endpointIndex].exists(height)) {
+				var p = level.geom.endpoints[endpointIndex];
+				var v = new Vertex();
+				v.X = cast p.position.x;
+				v.Y = cast p.position.y;
+				v.Z = height;
+				endpointVertices[endpointIndex][height] = vertices.length;
+				vertices.push(v);
+			}
+			return endpointVertices[endpointIndex][height];
+		}catch(e:Dynamic){
+			throw "Couldn't fetch vertex with index "+endpointIndex;
 		}
-		return endpointVertices[endpointIndex][height];
 	}
 
 	function floorFace(p:Poly) {

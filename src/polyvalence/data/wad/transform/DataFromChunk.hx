@@ -1,5 +1,6 @@
 package polyvalence.data.wad.transform;
 
+import polyvalence.data.wad.WadFile.WadfileDataVersion;
 import polyvalence.data.world.geom.*;
 import polyvalence.data.world.meta.*;
 import polyvalence.data.wad.DirectoryEntry.Chunk;
@@ -13,6 +14,7 @@ enum ChunkData{
 	Points(a:Array<Point>);
 	Annotations(a:Array<Annotation>);
 	Sides(a:Array<Side>);
+	MapIndices(a:Array<MapIndex>);
 
 	Ignored;
 }
@@ -28,18 +30,18 @@ class DataFromChunk {
 		return bytes.toString();
     }
 
-	public static function fromChunk(chunk:Chunk):ChunkData {
+	public static function fromChunk(chunk:Chunk, data_version:WadfileDataVersion):ChunkData {
 		switch (chunk.tag) {
 			case SIDE_TAG:
 				return Sides(Side.arrayFromBytes(chunk.bytes));
 			case ANNOTATION_TAG:
 				return Annotations(Annotation.arrayFromBytes(chunk.bytes));
-			/*case POINT_TAG:
-				return Points(Point.arrayFromBytes(chunk.bytes));*/
+			case POINT_TAG:
+				return Points(Point.arrayFromBytes(chunk.bytes));
 			case POLYGON_TAG:
                 return Polygons(Poly.arrayFromBytes(chunk.bytes));
 			case MAP_INFO_TAG:
-                return StaticInfo(MapInfo.fromBytes(chunk.bytes));
+                return StaticInfo(MapInfo.fromBytes(chunk.bytes, data_version));
 			case LINE_TAG:
 				return Lines(Line.arrayFromBytes(chunk.bytes));
 			case ENDPOINT_DATA_TAG:
@@ -47,12 +49,12 @@ class DataFromChunk {
 			/*case TERMINAL_DATA_TAG:
 				var terminals = ComputerInterface.fromBytes(chunk.bytes);
 				trace("Read " + terminals + " terminals");*/
-			/*case MAP_INDEXES_TAG:
+			case MAP_INDEXES_TAG:
 				var indices = MapIndex.arrayFromBytes(chunk.bytes);
-				trace("Read "+indices.length+" map indices");*/
+				return MapIndices(indices);
 			default:
 				#if debug
-					trace("Unhandled tag: "+uint32ToStr(chunk.tag));
+					//trace("Unhandled tag: "+uint32ToStr(chunk.tag));
 				#end
 		}
 		return Ignored;

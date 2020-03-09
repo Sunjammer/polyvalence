@@ -28,7 +28,9 @@ class Annotation{
         out.pos = Point.fromBytes(bi.read(4));
         out.poly_index = bi.readInt16();
         out.text = bi.readMacString(64);
+        #if verbose
         trace("Loaded :"+out);
+        #end
         return out;
     }
 

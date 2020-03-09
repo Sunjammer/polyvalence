@@ -20,6 +20,6 @@ abstract MapIndex(Int) from Int to Int{
     }
 
     public static function fromBytes(bytes:Bytes):MapIndex{
-        return null;
+        return 0;
     }
 }

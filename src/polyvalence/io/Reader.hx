@@ -16,6 +16,7 @@ class Reader {
 
 		trace("Reading " + path);
 		var fork_start = file.tryMacHeader(fileSize);
+		trace("Fork start is " + fork_start);
 		var wad = new WadFile(file, fork_start);
 
 		file.close();

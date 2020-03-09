@@ -1,4 +1,5 @@
 package polyvalence.data.world.meta;
+import polyvalence.data.wad.WadFile.WadfileDataVersion;
 using polyvalence.io.MacCompat;
 using StringTools;
 
@@ -32,7 +33,7 @@ class MapInfo{
         
     }
 
-    public static function fromBytes(bytes:Bytes):MapInfo{
+    public static function fromBytes(bytes:Bytes, data_version:WadfileDataVersion):MapInfo{
         var out = new MapInfo();
         var strm = new BytesInput(bytes);
         strm.bigEndian = true;
@@ -42,7 +43,12 @@ class MapInfo{
             out.musicId = strm.readUInt16();
             out.missionFlags = strm.readUInt16();
             out.envFlags = strm.readUInt16();
-            strm.read(8);
+            switch(data_version){
+                case Marathon:
+                    strm.read(4);
+                default:
+                    strm.read(8);
+            }
             out.name = strm.readMacString(66).trim();
             out.entryFlags = strm.readUint32B();
         }catch(e:Dynamic){

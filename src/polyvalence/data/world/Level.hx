@@ -32,7 +32,7 @@ class Level {
         var entities = [];
         var annotations = [];
 		for (c in de.chunks) {
-			switch (polyvalence.data.wad.transform.DataFromChunk.fromChunk(c)) {
+			switch (polyvalence.data.wad.transform.DataFromChunk.fromChunk(c, de.data_version)) {
 				case StaticInfo(info):
 					static_info = info;
 				case Polygons(a):
