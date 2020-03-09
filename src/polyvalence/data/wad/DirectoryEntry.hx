@@ -29,8 +29,8 @@ class DirectoryEntry {
 
     public var chunks:Map<UInt, Chunk> = new Map ();
     
-    public var offset:Int;
-    public var index:Int;
+    public var offset:Int = 0;
+    public var index:Int = 0;
     public var size(get,null):Int;
     function get_size() {
         var total = 0;
@@ -49,18 +49,21 @@ class DirectoryEntry {
     }
     
     public function loadChunks(reader:FileInput) {
+        reader.bigEndian = true;
         var position = reader.tell();
+        trace("Loading chunks from position "+position);
         var nextOffset;
         do {
-            var tag:RFTag = reader.readUint32B(); // Offset 
+            var tag:RFTag = reader.readUint32B(); 
             nextOffset = reader.readInt32();
             var length = reader.readInt32();
-            reader.readInt32(); // offset;
-                    
+            reader.readInt32();
+            
             chunks[tag] = new Chunk(tag, reader.read(length));
-                    
-            if (nextOffset > 0) 
+            
+            if (nextOffset > 0){
                 reader.seek(position + nextOffset, SeekBegin);
+            }
         } while (nextOffset > 0);
     }
 
