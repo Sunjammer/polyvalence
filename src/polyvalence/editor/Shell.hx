@@ -7,8 +7,8 @@ import haxe.io.Path;
 
 class Shell {
 	public function new() {
-		//var wads = ['test_data/m1/Map.scen'];
-		var wads = ['test_data/m2/Map.sceA'];
+		var wads = ['test_data/m1/Map.scen'];
+		//var wads = ['test_data/m2/Map.sceA'];
 		for (w in wads) {
 			var wad = Reader.readWad(w);
 			var levels = [];

@@ -33,13 +33,13 @@ class DataFromChunk {
 	public static function fromChunk(chunk:Chunk, data_version:WadfileDataVersion):ChunkData {
 		switch (chunk.tag) {
 			case SIDE_TAG:
-				return Sides(Side.arrayFromBytes(chunk.bytes));
+				return Sides(Side.arrayFromBytes(chunk.bytes, data_version));
 			case ANNOTATION_TAG:
 				return Annotations(Annotation.arrayFromBytes(chunk.bytes));
 			case POINT_TAG:
 				return Points(Point.arrayFromBytes(chunk.bytes));
 			case POLYGON_TAG:
-                return Polygons(Poly.arrayFromBytes(chunk.bytes));
+                return Polygons(Poly.arrayFromBytes(chunk.bytes, data_version));
 			case MAP_INFO_TAG:
                 return StaticInfo(MapInfo.fromBytes(chunk.bytes, data_version));
 			case LINE_TAG:
