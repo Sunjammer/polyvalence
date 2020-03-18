@@ -90,7 +90,7 @@ class OBJFace {
 class OBJExporter {
 	public static final SCALE = 32.0;
 	static final INVERTED = true;
-	static final KEEP_LANDSCAPE_FACES = false;
+	static final KEEP_LANDSCAPE_FACES = true;
 
 	var level:Level;
 	var vertices:Array<Vertex> = [];
@@ -108,17 +108,17 @@ class OBJExporter {
 		vertices = [];
 		endpointVertices = [];
 		materials = new Map();
-		//trace(level.geom.endpoints);
+		// trace(level.geom.endpoints);
 		for (i in 0...level.geom.endpoints.length) {
 			endpointVertices.push(new Map());
 		}
 
 		for (p in level.geom.polys) {
 			if (p.ceiling_height > p.floor_height) {
-				if (p.floor_transfer_mode != 9) {
+				if (p.floor_transfer_mode != 9 || KEEP_LANDSCAPE_FACES) {
 					faces.push(floorFace(p));
 				}
-				if (p.ceiling_transfer_mode != 9) {
+				if (p.ceiling_transfer_mode != 9 || KEEP_LANDSCAPE_FACES) {
 					faces.push(ceilingFace(p));
 				}
 				for (i in 0...p.vertex_count) {
@@ -145,7 +145,7 @@ class OBJExporter {
 	}
 
 	function getVertexIndex(endpointIndex:Int, height:Int) {
-		try{
+		try {
 			if (!endpointVertices[endpointIndex].exists(height)) {
 				var p = level.geom.endpoints[endpointIndex];
 				var v = new Vertex();
@@ -156,8 +156,8 @@ class OBJExporter {
 				vertices.push(v);
 			}
 			return endpointVertices[endpointIndex][height];
-		}catch(e:Dynamic){
-			throw "Couldn't fetch vertex with index "+endpointIndex;
+		} catch (e:Dynamic) {
+			throw "Couldn't fetch vertex with index " + endpointIndex;
 		}
 	}
 
@@ -171,6 +171,8 @@ class OBJExporter {
 		for (i in 0...p.vertex_count) {
 			result[i] = getVertexIndex(p.endpoint_indices[i], p.floor_height);
 		}
+		if (INVERTED)
+			result.reverse();
 		out.indices = result;
 		out.material = materials[ft];
 		return out;
@@ -187,6 +189,8 @@ class OBJExporter {
 		for (i in 0...p.vertex_count) {
 			result[i] = getVertexIndex(p.endpoint_indices[i], p.ceiling_height);
 		}
+		if (INVERTED)
+			result.reverse();
 		out.indices = result;
 		out.material = materials[ct];
 		return out;
@@ -199,6 +203,8 @@ class OBJExporter {
 		result[1] = getVertexIndex(right, floor);
 		result[2] = getVertexIndex(right, ceiling);
 		result[3] = getVertexIndex(left, ceiling);
+		if (INVERTED)
+			result.reverse();
 		out.material = material;
 		out.indices = result;
 		return out;
@@ -223,10 +229,10 @@ class OBJExporter {
 		var right;
 		var opposite:Poly = null;
 		var side:Side = null;
-		var pof = INVERTED ? line.poly_owner_back : line.poly_owner_front;
-		var pob = INVERTED ? line.poly_owner_front : line.poly_owner_back;
-		var psf = INVERTED ? line.poly_side_back : line.poly_side_front;
-		var psb = INVERTED ? line.poly_side_front : line.poly_side_back;
+		var pof = line.poly_owner_front;
+		var pob = line.poly_owner_back;
+		var psf = line.poly_side_front;
+		var psb = line.poly_side_back;
 
 		if (pof != -1 && level.geom.polys[pof] == p) {
 			left = line.ep_start;
