@@ -6,7 +6,7 @@ class RNG {
 	static var local_random_seed:Int = 0x1;
 
 	public static function set_random_seed(seed:Int) {
-		random_seed = seed ? seed : DEFAULT_RANDOM_SEED;
+		random_seed = seed != 0 ? seed : DEFAULT_RANDOM_SEED;
 
 		return;
 	}
@@ -18,7 +18,7 @@ class RNG {
 	public static function random():Int {
 		var seed = random_seed;
 
-		if (seed & 1) {
+		if (seed & 1 != 0) {
 			seed = (seed >> 1) ^ 0xb400;
 		} else {
 			seed >>= 1;
@@ -30,7 +30,7 @@ class RNG {
 	public static function local_random():Int {
 		var seed = local_random_seed;
 
-		if (seed & 1) {
+		if (seed & 1 != 0) {
 			seed = (seed >> 1) ^ 0xb400;
 		} else {
 			seed >>= 1;
