@@ -1,3 +1,5 @@
 test_data
 bin/node_modules
 bin/package-lock.json
+bin/*.js
+bin/*.js.map
