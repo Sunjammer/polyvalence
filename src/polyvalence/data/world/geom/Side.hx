@@ -137,10 +137,10 @@ class Side {
 		}
 
 		if (data_version == Marathon) {
-			/*
-				map_sides[loop].transparent_texture.texture= NONE;
-				map_sides[loop].ambient_delta= 0;
-			 */
+			for (side in out) {
+				side.transparent_texture.texture = 0;
+				side.ambient_delta = 0;
+			}
 		}
 		return out;
 	}

@@ -92,6 +92,8 @@ class OBJExporter {
 	static final INVERTED = true;
 	static final KEEP_LANDSCAPE_FACES = true;
 
+	static final MULTI_MATERIAL = true;
+
 	var level:Level;
 	var vertices:Array<Vertex> = [];
 	var endpointVertices:Array<Map<Int, Int>> = [];
@@ -129,8 +131,10 @@ class OBJExporter {
 
 		var writer = File.write(path, true);
 
-		for (m in materials) {
-			m.write(writer);
+		if(MULTI_MATERIAL){
+			for (m in materials) {
+				m.write(writer);
+			}
 		}
 
 		for (v in vertices) {
@@ -185,7 +189,7 @@ class OBJExporter {
 		}
 
 		var out = new OBJFace();
-		var result = [];
+		var result:Array<Int> = [];
 		for (i in 0...p.vertex_count) {
 			result[i] = getVertexIndex(p.endpoint_indices[i], p.ceiling_height);
 		}
@@ -213,7 +217,7 @@ class OBJExporter {
 	function writeFace(w:Output, face:OBJFace) {
 		if (face.material != currentMaterial) {
 			currentMaterial = face.material;
-			if (currentMaterial != null) {
+			if (MULTI_MATERIAL && currentMaterial != null) {
 				w.writeString("usemtl " + currentMaterial.name + "\n");
 			}
 		}

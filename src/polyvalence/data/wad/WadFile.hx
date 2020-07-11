@@ -1,5 +1,4 @@
 package polyvalence.data.wad;
-
 import sys.io.FileInput;
 
 using polyvalence.io.MacCompat;

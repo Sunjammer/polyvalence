@@ -1,4 +1,4 @@
-package polyvalence.util;
+package polyvalence.m2engine;
 
 class RNG {
 	static inline final DEFAULT_RANDOM_SEED = 0xfded;

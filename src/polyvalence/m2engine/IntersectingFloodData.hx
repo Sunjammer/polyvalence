@@ -1,4 +1,4 @@
-package polyvalence.util;
+package polyvalence.m2engine;
 
 import polyvalence.data.world.geom.Point;
 

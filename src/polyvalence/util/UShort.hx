@@ -43,7 +43,7 @@ abstract UShort(Bytes){
 	}
 
 	@:op(A >> B) private static inline function shr(a:UShort, b:Int):UShort {
-		return a.get() >>> b;
+		return a.get() >> b;
 	}
 
 	@:op(A >>> B) private static inline function ushr(a:UShort, b:Int):UShort {
