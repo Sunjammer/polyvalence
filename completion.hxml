@@ -1,0 +1,6 @@
+-cp src
+-lib heaps
+-lib domkit
+-lib hxnodejs
+-lib electron
+-js polyvalence.js
