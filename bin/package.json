@@ -1,0 +1,14 @@
+{
+    "name": "polyvalence",
+    "version": "0.0.1",
+    "license": "MIT",
+    "description": "Fatum Iustum Stultorum",
+    "repository": "",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "dependencies": {
+        "electron": "^9.0.5"
+    }
+}

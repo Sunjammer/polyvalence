@@ -1,14 +1,34 @@
 package;
+import js.Node;
+import js.Node.__dirname;
+import electron.main.App;
+import electron.main.BrowserWindow;
 
-import polyvalence.editor.Shell;
-import polyvalence.data.world.meta.ComputerInterface;
-import haxe.io.Bytes;
-import polyvalence.io.Reader;
+class Main {
+	public static function main() {
+		electron.main.App.on(ready, function(e) {
+			var win = new BrowserWindow({
+				width: 720,
+				height: 480,
+				webPreferences: {
+					nodeIntegration: true
+				}
+			});
+			win.on(closed, function() {
+				win = null;
+			});
+			win.loadFile('app.html');
 
-class Main{
-    public static function main(){
-        var args = Sys.args();
+			#if debug
+			win.webContents.openDevTools();
+			#end
 
-        new Shell();
-    }
+			var tray = new electron.main.Tray('${__dirname}/Marathon_logo.svg.png');
+		});
+
+		electron.main.App.on(window_all_closed, function(e) {
+			if (Node.process.platform != 'darwin')
+				electron.main.App.quit();
+		});
+	}
 }

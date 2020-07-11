@@ -1,0 +1,17 @@
+-cp src
+--debug
+--dce full
+-lib heaps
+-lib domkit
+-lib hxnodejs
+-lib electron
+
+--each
+
+--next
+-js bin/main.js
+-main Main
+
+--next
+-js bin/app.js
+-main App
