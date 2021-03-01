@@ -10,6 +10,7 @@ class Main {
 			var win = new BrowserWindow({
 				width: 720,
 				height: 480,
+				title: 'Polyvalence',
 				webPreferences: {
 					nodeIntegration: true
 				}
@@ -24,6 +25,7 @@ class Main {
 			#end
 
 			var tray = new electron.main.Tray('${__dirname}/Marathon_logo.svg.png');
+			tray.setTitle('Polyvalence');
 		});
 
 		electron.main.App.on(window_all_closed, function(e) {
