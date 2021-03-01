@@ -105,7 +105,7 @@ class OBJExporter {
 		this.level = level;
 	}
 
-	public function export(path:String) {
+	public function export(writer:Output) {
 		faces = [];
 		vertices = [];
 		endpointVertices = [];
@@ -128,8 +128,6 @@ class OBJExporter {
 				}
 			}
 		}
-
-		var writer = File.write(path, true);
 
 		if(MULTI_MATERIAL){
 			for (m in materials) {
